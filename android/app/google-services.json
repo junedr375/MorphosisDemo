@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "888050049134",
+    "project_id": "demomorphosis",
+    "storage_bucket": "demomorphosis.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:888050049134:android:a34164a64527488415467f",
+        "android_client_info": {
+          "package_name": "com.demo.morphosis"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "888050049134-meu0cp9054jjtbrh3879oo5h5i8raq61.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4tobQEtWalyxaqnPCwVmoUkVzdArHeOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "888050049134-meu0cp9054jjtbrh3879oo5h5i8raq61.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
