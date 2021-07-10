@@ -14,7 +14,7 @@
 # All Task Completed Task Assigment
 -> Used Provider Package <br>
 -> Added Backend with Firebase <br>
--> Default Firebase Accound showing Permission error so created new Firbase Project by own and Integrated <br>
+-> Default Firebase Account showing Permission error so created new Firbase Project and Integrated <br>
 -> All Task Completed Task Working <br>
 -> Implemented CRUD operation with Error Handling <br>
 
