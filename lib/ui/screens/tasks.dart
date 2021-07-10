@@ -4,6 +4,7 @@ import 'package:morphosis_flutter_demo/non_ui/modal/task.dart';
 
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 import 'package:morphosis_flutter_demo/ui/screens/task.dart';
+import 'package:morphosis_flutter_demo/ui/widgets/error_widget.dart';
 
 class TasksPage extends StatelessWidget {
   TasksPage(
@@ -68,13 +69,27 @@ class _Task extends StatelessWidget {
 
   final Task task;
 
-  void _delete() {
-    FirebaseManager.shared.deleteTask(task);
+  void _delete(BuildContext context) {
+    try {
+      FirebaseManager.shared.deleteTask(task);
+      _showMessage(context, 'Task Deleted Successfully');
+    } catch (e) {
+      _showErrorMessage(
+          context, e.toString(), 'Back', () => Navigator.pop(context));
+      _showMessage(context, 'error in deleting the task');
+    }
   }
 
-  void _toggleComplete() {
-    task.toggleComplete();
-    FirebaseManager.shared.updateTask(task);
+  void _toggleComplete(BuildContext context) {
+    try {
+      task.toggleComplete();
+      FirebaseManager.shared.updateTask(task);
+      _showMessage(context, 'Task Updated Successfully');
+    } catch (e) {
+      _showErrorMessage(
+          context, e.toString(), 'Back', () => Navigator.pop(context));
+      _showMessage(context, 'error in updating task');
+    }
   }
 
   void _view(BuildContext context) {
@@ -87,6 +102,29 @@ class _Task extends StatelessWidget {
     );
   }
 
+  void _showMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: Duration(milliseconds: 500),
+        content: new Text(message),
+      ),
+    );
+  }
+
+  void _showErrorMessage(BuildContext context, String message,
+      String buttonTiltle, Function() onTap) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ErrorMessage(
+                  message: message,
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  buttonTitle: 'Back',
+                )));
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -94,7 +132,9 @@ class _Task extends StatelessWidget {
         icon: Icon(
           task.isCompleted ? Icons.check_box : Icons.check_box_outline_blank,
         ),
-        onPressed: _toggleComplete,
+        onPressed: () {
+          _toggleComplete(context);
+        },
       ),
       title: Text(task.title),
       subtitle: Text(task.description),
@@ -102,7 +142,9 @@ class _Task extends StatelessWidget {
         icon: Icon(
           Icons.delete,
         ),
-        onPressed: _delete,
+        onPressed: () {
+          _delete(context);
+        },
       ),
       onTap: () => _view(context),
     );

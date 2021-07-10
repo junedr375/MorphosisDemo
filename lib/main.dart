@@ -1,17 +1,27 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:morphosis_flutter_demo/non_ui/modal/photo.dart';
 import 'package:morphosis_flutter_demo/non_ui/provider/DataProvider.dart';
 
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 import 'package:morphosis_flutter_demo/ui/screens/index.dart';
 import 'package:morphosis_flutter_demo/ui/widgets/error_widget.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 const title = 'Morphosis Demo';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Directory directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter(PhotoAdapter());
+  Hive.registerAdapter(SrcAdapter());
+  if (!Hive.isBoxOpen('photoBox')) await Hive.openBox<Photo>('photoBox');
+
   runZonedGuarded(() {
     runApp(FirebaseApp());
   }, (error, stackTrace) {
