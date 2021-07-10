@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:morphosis_flutter_demo/non_ui/Utils/AppThemeData.dart';
 import 'package:morphosis_flutter_demo/non_ui/modal/photo.dart';
 import 'package:provider/provider.dart';
 import 'package:morphosis_flutter_demo/non_ui/provider/DataProvider.dart';
@@ -40,10 +41,16 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final theme = getThemeData(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        centerTitle: true,
+        title: Text(
+          "Home",
+          key: Key('TitleKey'),
+          style: theme.textTheme.headline1,
+        ),
         actions: [],
       ),
       body: Container(
@@ -99,18 +106,26 @@ class _HomePageState extends State<HomePage>
 
   //Search is implememted on DB
   Widget _searchTileWidget() {
+    final theme = getThemeData(context);
     return Consumer<DataNotifier>(builder: (ctx, photProvider, child) {
       if (photProvider.homeSearchStatus == HomeSearchStatus.Searching) {
         return Center(child: CircularProgressIndicator());
       }
       if (photProvider.homeState == HomeState.Error) {
-        return Center(child: Text('An Error Occured '));
+        return Center(
+            child: Text(
+          'An Error Occured ',
+          style: theme.textTheme.headline3,
+        ));
       }
       if (photProvider.homeSearchStatus == HomeSearchStatus.SearchNotFound) {
-        return Center(child: Text('No Result Found '));
+        return Center(
+            child: Text('No Result Found ', style: theme.textTheme.headline3));
       }
       if (photProvider.homeSearchStatus == HomeSearchStatus.Empty) {
-        return Center(child: Text('Local DB is Empty '));
+        return Center(
+            child:
+                Text('Local DB is Empty ', style: theme.textTheme.headline3));
       }
 
       if (photProvider.homeSearchStatus == HomeSearchStatus.SearchedFound) {
@@ -120,7 +135,10 @@ class _HomePageState extends State<HomePage>
               height: 30,
               margin: EdgeInsets.symmetric(horizontal: 15),
               child: Center(
-                child: Text('Fetching data from Local DB'),
+                child: Text(
+                  'Fetching data from Local DB',
+                  style: theme.textTheme.bodyText1,
+                ),
               ),
             ),
             Expanded(
@@ -158,7 +176,7 @@ class _HomePageState extends State<HomePage>
                               alignment: Alignment.center,
                               child: Text(
                                 photo.photographer,
-                                style: Theme.of(context).textTheme.headline6,
+                                style: theme.textTheme.headline3,
                               ),
                             ),
                           ),
@@ -181,6 +199,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _listTileWidget() {
+    final theme = getThemeData(context);
     return Consumer<DataNotifier>(builder: (ctx, photProvider, child) {
       if (photProvider.homeState == HomeState.Loading) {
         return Center(child: CircularProgressIndicator());
@@ -227,7 +246,7 @@ class _HomePageState extends State<HomePage>
                               alignment: Alignment.center,
                               child: Text(
                                 photo.photographer,
-                                style: Theme.of(context).textTheme.headline6,
+                                style: theme.textTheme.headline3,
                               ),
                             ),
                           ),

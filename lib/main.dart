@@ -3,8 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:morphosis_flutter_demo/non_ui/Utils/AppThemeData.dart';
 import 'package:morphosis_flutter_demo/non_ui/modal/photo.dart';
 import 'package:morphosis_flutter_demo/non_ui/provider/DataProvider.dart';
+import 'package:morphosis_flutter_demo/non_ui/provider/TaskProvider.dart';
 
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 import 'package:morphosis_flutter_demo/ui/screens/index.dart';
@@ -17,10 +19,11 @@ const title = 'Morphosis Demo';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory directory = await getApplicationDocumentsDirectory();
-  Hive.init(directory.path);
-  Hive.registerAdapter(PhotoAdapter());
-  Hive.registerAdapter(SrcAdapter());
-  if (!Hive.isBoxOpen('photoBox')) await Hive.openBox<Photo>('photoBox');
+  Hive.init(directory.path); // Initializing Hive for Local Database
+  Hive.registerAdapter(PhotoAdapter()); // Registering Adapters
+  Hive.registerAdapter(SrcAdapter()); // Registering Adapters
+  if (!Hive.isBoxOpen('photoBox'))
+    await Hive.openBox<Photo>('photoBox'); //Opening Hive box to use
 
   runZonedGuarded(() {
     runApp(FirebaseApp());
@@ -111,16 +114,22 @@ class App extends StatelessWidget {
   ///TODO: Restructure folders pr rearrange folders based on your need.
   ///TODO: Implement state management of your choice.
 
+  ///Added Provider for State  Management
+  ///Added Theme setting accorading to User's System Preferance
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => DataNotifier()),
+          ChangeNotifierProvider(create: (context) => TaskNotifier()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: title,
           home: IndexPage(),
+          themeMode: ThemeMode.system,
+          theme: appLightThemeData(),
+          darkTheme: appDarkThemeData(),
         ));
   }
 }

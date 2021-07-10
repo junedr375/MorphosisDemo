@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:morphosis_flutter_demo/non_ui/Utils/AppThemeData.dart';
 import 'package:morphosis_flutter_demo/non_ui/modal/task.dart';
+import 'package:morphosis_flutter_demo/non_ui/provider/TaskProvider.dart';
 
 import 'package:morphosis_flutter_demo/non_ui/repo/firebase_manager.dart';
 import 'package:morphosis_flutter_demo/ui/screens/task.dart';
 import 'package:morphosis_flutter_demo/ui/widgets/error_widget.dart';
+import 'package:provider/provider.dart';
 
 class TasksPage extends StatelessWidget {
   TasksPage(
@@ -23,9 +26,14 @@ class TasksPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = getThemeData(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        centerTitle: true,
+        title: Text(
+          title,
+          style: theme.textTheme.headline1,
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -70,26 +78,12 @@ class _Task extends StatelessWidget {
   final Task task;
 
   void _delete(BuildContext context) {
-    try {
-      FirebaseManager.shared.deleteTask(task);
-      _showMessage(context, 'Task Deleted Successfully');
-    } catch (e) {
-      _showErrorMessage(
-          context, e.toString(), 'Back', () => Navigator.pop(context));
-      _showMessage(context, 'error in deleting the task');
-    }
+    Provider.of<TaskNotifier>(context, listen: false).deleteTask(task, context);
   }
 
   void _toggleComplete(BuildContext context) {
-    try {
-      task.toggleComplete();
-      FirebaseManager.shared.updateTask(task);
-      _showMessage(context, 'Task Updated Successfully');
-    } catch (e) {
-      _showErrorMessage(
-          context, e.toString(), 'Back', () => Navigator.pop(context));
-      _showMessage(context, 'error in updating task');
-    }
+    task.toggleComplete();
+    Provider.of<TaskNotifier>(context, listen: false).updateTask(task, context);
   }
 
   void _view(BuildContext context) {
@@ -102,31 +96,9 @@ class _Task extends StatelessWidget {
     );
   }
 
-  void _showMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        duration: Duration(milliseconds: 500),
-        content: new Text(message),
-      ),
-    );
-  }
-
-  void _showErrorMessage(BuildContext context, String message,
-      String buttonTiltle, Function() onTap) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ErrorMessage(
-                  message: message,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  buttonTitle: 'Back',
-                )));
-  }
-
   @override
   Widget build(BuildContext context) {
+    final theme = getThemeData(context);
     return ListTile(
       leading: IconButton(
         icon: Icon(
@@ -136,8 +108,11 @@ class _Task extends StatelessWidget {
           _toggleComplete(context);
         },
       ),
-      title: Text(task.title),
-      subtitle: Text(task.description),
+      title: Text(
+        task.title,
+        style: theme.textTheme.headline3,
+      ),
+      subtitle: Text(task.description, style: theme.textTheme.bodyText1),
       trailing: IconButton(
         icon: Icon(
           Icons.delete,
