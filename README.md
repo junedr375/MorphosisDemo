@@ -4,7 +4,7 @@
 ## App Demo Link: https://drive.google.com/file/d/1nMrh7WKHKHvVovwwAxtEIFpUMEC3I3aw/view?usp=sharing
 
 
-# Home (Used Packages) Assignment <br>
+# Home Assignment <br>
 -> Used Provider, Http <br>
 -> Implemented Pagination <br>
 -> API Used: https://api.pexels.com/v1/  <br>
